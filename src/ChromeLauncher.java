@@ -5,10 +5,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class ChromeLauncher {
@@ -35,25 +33,25 @@ public class ChromeLauncher {
         login(testData);
 
         //Create new Shop
-        TestShopCreation testShopCreation = new TestShopCreation();
-        testShopCreation.createShop(wait,driver,testData);
+        TestShopCreation.createShop(wait,driver,testData);
 
         //Import Feed
         TestFeedImport testFeedImport = new TestFeedImport();
         testFeedImport.importFeed(wait,driver,testData,waitLong,je);
 
         //Export Feed
-        driver.findElement(By.cssSelector("div.menu-bar a.button.price-comparison-sites")).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.row.channels a.add-channel"))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.channels a[href=\"#googleShopping\"]"))).click();
-        //Use Google Shopping
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div > div.row > div > div.layer > div.row.context > div.display > div.general > div.logo > img[src=\"https://cdn-frontend-channelpilotsolu.netdna-ssl.com/images/channels/medium/googleShopping.png\"]")));
-        driver.findElement(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div > div.row > div > div.layer > div.row.context > div.display > div.general > div.links > div")).click();
-        assertTrue("ChannelSetup complete", testChannelSetup());
+        TestExport.createExport(wait,je);
+//        driver.findElement(By.cssSelector("div.menu-bar a.button.price-comparison-sites")).click();
+//        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.row.channels a.add-channel"))).click();
+//        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.channels a[href=\"#googleShopping\"]"))).click();
+//        //Use Google Shopping
+//        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div > div.row > div > div.layer > div.row.context > div.display > div.general > div.logo > img[src=\"https://cdn-frontend-channelpilotsolu.netdna-ssl.com/images/channels/medium/googleShopping.png\"]")));
+//        driver.findElement(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div > div.row > div > div.layer > div.row.context > div.display > div.general > div.links > div")).click();
+//        assertTrue("ChannelSetup complete", testChannelSetup());
 
         //Clean Up & Tear Down
         //Delete Shop
-        testShopCreation.deleteShop(wait,driver);
+        TestShopCreation.deleteShop(wait,driver);
 
         //Logout
         logout();
