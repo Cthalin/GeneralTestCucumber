@@ -14,54 +14,34 @@ import static org.junit.Assert.assertTrue;
 public class ChromeLauncher {
     private static WebDriver driver;
     private static WebDriverWait waitLong;
+    private static WebDriverWait wait;
 
     public static void main(String[] args) throws InterruptedException {
+        //Start Chrome Browser driver
         ChromeOptions capabilities = new ChromeOptions();;
         driver = new ChromeDriver(capabilities);
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait = new WebDriverWait(driver, 10);
         waitLong = new WebDriverWait(driver, 600);
         JavascriptExecutor je = (JavascriptExecutor) driver;
 //        driver.manage().window().maximize();
 //        System.setProperty("webdriver.chrome.driver","C:\\\\Users\\Erik\\Projects\\Selenium\\Driver");
         capabilities.setCapability("marionette", true);
 
-        //Release
-        String url = "https://release.go.channelpilot.com";
-        String user = "release_1080@channelpilot.com";
-        String passwd = "Daheim123";
-        //Würfel
-//        String url = "http://erikswuerfel";
-//        String user = "erik.slowikowski@channelpilot.com";
-//        String passwd = "*uUQL;k!6(9p&Em&";
+        //Get Test Data
+        TestData testData = new TestData("idealo");
+        driver.get(testData.url);
 
-        String shopTitle = "TestShop";
-        String shopUrl = "www.testshop.shop";
-        String feedUrl = "http://www.daheim.de/channelpilot?password=cP4AMz2014";
-
-        driver.get(url);
-
-        driver.findElement(By.name("email")).click();
-        driver.findElement(By.name("email")).sendKeys(user);
-        WebElement parent = driver.findElement(By.className("password"));
-        parent.findElement(By.name("password")).sendKeys(passwd);
-        driver.findElement(By.cssSelector("form.login div.submit input")).click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.ready")));
-        driver.findElement(By.cssSelector("nav.start a[href=\"/start/shops\"]")).click();
+        //Login
+        login(testData);
 
         //Create new Shop
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("a.shops[href=\"#shops\"]"))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.cssSelector("a[href=\"/start/shops/new\"")))).click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("input.title")));
-        driver.findElement(By.cssSelector("input.title")).sendKeys(shopTitle);
-        driver.findElement(By.cssSelector("input.url")).sendKeys(shopUrl);
-        driver.findElement(By.cssSelector("input.is-active")).click();
-        Thread.sleep(1000);
-        driver.findElement(By.cssSelector("input.theme")).click();
+        TestShopCreation testShopCreation = new TestShopCreation();
+        testShopCreation.createShop(wait,driver,testData);
 
         //Import Feed
         Thread.sleep(5000);
         WebElement title = driver.findElement(By.cssSelector("h1.shop-selected-title"));
-        waitLong.until(ExpectedConditions.attributeToBe(title,"innerText",shopTitle));
+        waitLong.until(ExpectedConditions.attributeToBe(title,"innerText",testData.shopTitle));
         WebElement myDynElement = (new WebDriverWait(driver,5)).until(ExpectedConditions.elementToBeClickable(By.cssSelector("ul.category-navigation a[href=\"#catalog\"]")));
         myDynElement.click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.catalog-source label.type")));
@@ -70,7 +50,7 @@ public class ChromeLauncher {
         typeSelect.selectByValue("http");
         Thread.sleep(1000);
         je.executeScript("arguments[0].scrollIntoView(true);",driver.findElement(By.cssSelector("div.catalog-source div.type.http input.url")));
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.catalog-source div.type.http input.url"))).sendKeys(feedUrl);
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.catalog-source div.type.http input.url"))).sendKeys(testData.feedUrl);
         Thread.sleep(1000);
 
         driver.findElement(By.cssSelector("div.single-feed-config form.catalog-source div.submit input")).click();
@@ -99,17 +79,12 @@ public class ChromeLauncher {
         driver.findElement(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div > div.row > div > div.layer > div.row.context > div.display > div.general > div.links > div")).click();
         assertTrue("ChannelSetup complete", testChannelSetup());
 
-        //Clean Up
+        //Clean Up & Tear Down
         //Delete Shop
-        driver.findElement(By.cssSelector("div.menu-bar a.button.start")).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("ul.category-navigation a[href=\"#setup\"]"))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.row.settings a.button.delete"))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.body a.button.okay"))).click();
+        testShopCreation.deleteShop(wait,driver);
 
         //Logout
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.category-context")));
-        driver.findElement(By.cssSelector("div.navigation-service a.button")).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.navigation-service a[href=\"/service/logout\"]"))).click();
+        logout();
 
         Thread.sleep(5000);
         driver.quit();
@@ -128,5 +103,21 @@ public class ChromeLauncher {
     public static boolean testChannelSetup(){
         waitLong.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div > div.twelve.columns.channel-overview > ul > li:nth-child(2) > a")));
         return driver.findElement(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div > div.twelve.columns.channel-overview > ul > li:nth-child(2) > a")).findElements(By.cssSelector("a[title=\"googleShopping (DE)\"]")).size() == 1;
+    }
+
+    public static void login(TestData testData){
+        driver.findElement(By.name("email")).click();
+        driver.findElement(By.name("email")).sendKeys(testData.user);
+        WebElement parent = driver.findElement(By.className("password"));
+        parent.findElement(By.name("password")).sendKeys(testData.passwd);
+        driver.findElement(By.cssSelector("form.login div.submit input")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.ready")));
+        driver.findElement(By.cssSelector("nav.start a[href=\"/start/shops\"]")).click();
+    }
+
+    public static void logout(){
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.category-context")));
+        driver.findElement(By.cssSelector("div.navigation-service a.button")).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.navigation-service a[href=\"/service/logout\"]"))).click();
     }
 }

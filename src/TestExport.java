@@ -36,9 +36,6 @@ public class TestExport {
         String shopTitle = "TestShop";
         String shopUrl = "www.testshop.shop";
         String feedUrl = "http://www.daheim.de/channelpilot?password=cP4AMz2014";
-//        googleChannelLogo = "https://cdn-frontend-channelpilotsolu.netdna-ssl.com/images/channels/medium/googleShopping.png";
-//        idealoChannelLogo = "https://cdn-frontend-channelpilotsolu.netdna-ssl.com/images/channels/medium/idealo.de.png";
-//        yourChannelLogo = idealoChannelLogo;
         testData = new TestData("idealo");
 
         driver.get(url);
@@ -55,16 +52,15 @@ public class TestExport {
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.row.shop-selector a[title=\""+shopTitle+"\"]"))).click();
 
         //Export Feed
+        je.executeScript("arguments[0].scrollIntoView(true);",driver.findElement(By.cssSelector("div.row.channels a.add-channel")));
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.row.channels a.add-channel"))).click();
         waitLong.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.channels a[href=\""+testData.ref+"\"]"))).click();
-        //Use Google Shopping
         Thread.sleep(3000);
-        System.out.println("Bleep");
         checkChannel(testData.logo);
         waitLong.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.app.pcs-manager div.logo > img[src=\""+testData.logo+"\"]")));
         Thread.sleep(3000);
         driver.findElement(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div > div.row > div > div.layer > div.row.context > div.display > div.general > div.links > div")).click();
-        assertTrue("ChannelSetup complete", testChannelSetup());
+        assertTrue("ChannelSetup incomplete", testChannelSetup());
 
         //Clean Up
         //Delete Feed
@@ -73,7 +69,7 @@ public class TestExport {
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#channelpilot-dialogbox > div > a.button.okay"))).click();
 
         //Logout
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.category-context")));
+        Thread.sleep(2000);
         driver.findElement(By.cssSelector("div.navigation-service a.button")).click();
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.navigation-service a[href=\"/service/logout\"]"))).click();
 
@@ -83,13 +79,11 @@ public class TestExport {
 
     public static boolean testChannelSetup(){
         waitLong.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div > div.twelve.columns.channel-overview > ul > li:nth-child(2) > a")));
-        return driver.findElement(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div > div.twelve.columns.channel-overview > ul a")).findElements(By.cssSelector("a[title=\""+testData.title+"\"]")).size() == 1;
+        return driver.findElement(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div > div.twelve.columns.channel-overview > ul a")).findElements(By.cssSelector("a[title=\""+testData.title+"\"]")).size() == 0;
     }
 
     public static void checkChannel(String yourChannelLogo){
         WebElement channelLogoWE = driver.findElement(By.cssSelector("div.app.pcs-manager div.logo > img[src]"));
-        System.out.println(channelLogoWE.getAttribute("src"));
-        System.out.println(yourChannelLogo);
         assertTrue("Wrong Channel selected",channelLogoWE.getAttribute("src").contains(yourChannelLogo));
     }
 }
