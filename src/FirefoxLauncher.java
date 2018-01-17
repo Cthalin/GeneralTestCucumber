@@ -4,7 +4,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class ChromeLauncher {
+public class FirefoxLauncher {
     private static WebDriver driver;
     private static WebDriverWait waitLong;
     private static WebDriverWait wait;
