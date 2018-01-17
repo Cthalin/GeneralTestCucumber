@@ -46,13 +46,9 @@ public class TestExport {
         WebElement parent = driver.findElement(By.className("password"));
         parent.findElement(By.name("password")).sendKeys(passwd);
         driver.findElement(By.cssSelector("form.login div.submit input")).click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.ready")));
-        driver.findElement(By.cssSelector("div.menu-bar a.button.price-comparison-sites")).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("body > div.page > div > div.row.shop-selector > div > a"))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.row.shop-selector a[title=\""+shopTitle+"\"]"))).click();
 
         //Export Feed
-        createExport(wait,je);
+        createExport(wait,je,testData);
 
         //Clean Up
         //Delete Feed
@@ -69,7 +65,10 @@ public class TestExport {
         driver.quit();
     }
 
-    public static void createExport(WebDriverWait wait, JavascriptExecutor je) throws InterruptedException {
+    public static void createExport(WebDriverWait wait, JavascriptExecutor je, TestData testData) throws InterruptedException {
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.menu-bar a.button.price-comparison-sites"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("body > div.page > div > div.row.shop-selector > div > a"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.row.shop-selector a[title=\""+testData.shopTitle+"\"]"))).click();
         je.executeScript("arguments[0].scrollIntoView(true);",driver.findElement(By.cssSelector("div.row.channels a.add-channel")));
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.row.channels a.add-channel"))).click();
         waitLong.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.channels a[href=\""+testData.ref+"\"]"))).click();

@@ -35,7 +35,7 @@ public class ChromeLauncher {
         testFeedImport.importFeed(wait,driver,testData,waitLong,je);
 
         //Export Feed
-        TestExport.createExport(wait,je);
+        TestExport.createExport(wait,je,testData);
 
         //Clean Up & Tear Down
         //Delete Shop

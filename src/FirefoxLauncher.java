@@ -1,8 +1,10 @@
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.logging.Level;
 
 public class FirefoxLauncher {
     private static WebDriver driver;
@@ -11,14 +13,13 @@ public class FirefoxLauncher {
 
     public static void main(String[] args) throws InterruptedException {
         //Start Chrome Browser driver
-        ChromeOptions capabilities = new ChromeOptions();
-        driver = new ChromeDriver(capabilities);
+        driver = new FirefoxDriver();
         wait = new WebDriverWait(driver, 10);
         waitLong = new WebDriverWait(driver, 600);
         JavascriptExecutor je = (JavascriptExecutor) driver;
 //        driver.manage().window().maximize();
-//        System.setProperty("webdriver.chrome.driver","C:\\\\Users\\Erik\\Projects\\Selenium\\Driver");
-        capabilities.setCapability("marionette", true);
+//        System.setProperty("webdriver.firefox.driver","C:\\\\Users\\Erik\\Projects\\Selenium\\Driver");
+        System.setProperty("webdriver.firefox.marionette","true");
 
         //Get Test Data
         TestData testData = new TestData("idealo");
@@ -35,7 +36,7 @@ public class FirefoxLauncher {
         testFeedImport.importFeed(wait,driver,testData,waitLong,je);
 
         //Export Feed
-        TestExport.createExport(wait,je);
+        TestExport.createExport(wait,je,testData);
 
         //Clean Up & Tear Down
         //Delete Shop
