@@ -1,3 +1,5 @@
+package view;
+
 public class TestData {
     String ref;
     String logo;
@@ -9,7 +11,7 @@ public class TestData {
     String shopTitle;
     String shopUrl;
 
-    public TestData(String chan){
+    TestData(String chan){
 
         switch (chan){
             case "google":

@@ -1,3 +1,5 @@
+package view;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -33,9 +35,9 @@ public class TestExport {
 //        String user = "erik.slowikowski@channelpilot.com";
 //        String passwd = "*uUQL;k!6(9p&Em&";
 
-        String shopTitle = "TestShop";
-        String shopUrl = "www.testshop.shop";
-        String feedUrl = "http://www.daheim.de/channelpilot?password=cP4AMz2014";
+//        String shopTitle = "TestShop";
+//        String shopUrl = "www.testshop.shop";
+//        String feedUrl = "http://www.daheim.de/channelpilot?password=cP4AMz2014";
         testData = new TestData("idealo");
 
         driver.get(url);

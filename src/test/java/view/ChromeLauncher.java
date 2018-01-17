@@ -1,3 +1,5 @@
+package view;
+
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -5,16 +7,13 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class ChromeLauncher {
-    private static WebDriver driver;
-    private static WebDriverWait waitLong;
-    private static WebDriverWait wait;
 
     public static void main(String[] args) throws InterruptedException {
         //Start Chrome Browser driver
         ChromeOptions capabilities = new ChromeOptions();
-        driver = new ChromeDriver(capabilities);
-        wait = new WebDriverWait(driver, 10);
-        waitLong = new WebDriverWait(driver, 600);
+        WebDriver driver = new ChromeDriver(capabilities);
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait waitLong = new WebDriverWait(driver, 600);
         JavascriptExecutor je = (JavascriptExecutor) driver;
 //        driver.manage().window().maximize();
 //        System.setProperty("webdriver.chrome.driver","C:\\\\Users\\Erik\\Projects\\Selenium\\Driver");
@@ -28,21 +27,21 @@ public class ChromeLauncher {
         Utils.login(wait, driver, testData);
 
         //Create new Shop
-        TestShopCreation.createShop(wait,driver,testData);
+        TestShopCreation.createShop(wait, driver,testData);
 
         //Import Feed
         TestFeedImport testFeedImport = new TestFeedImport();
-        testFeedImport.importFeed(wait,driver,testData,waitLong,je);
+        testFeedImport.importFeed(wait, driver,testData, waitLong,je);
 
         //Export Feed
         TestExport.createExport(wait,je,testData);
 
         //Clean Up & Tear Down
         //Delete Shop
-        TestShopCreation.deleteShop(wait,driver);
+        TestShopCreation.deleteShop(wait, driver);
 
         //Logout
-        Utils.logout(wait,driver);
+        Utils.logout(wait, driver);
 
         Thread.sleep(5000);
         driver.quit();
