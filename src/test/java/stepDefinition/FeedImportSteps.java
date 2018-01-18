@@ -2,6 +2,7 @@ package stepDefinition;
 
 import cucumber.api.java.en.Given;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -16,6 +17,7 @@ public class FeedImportSteps {
     private WebDriverWait wait = new WebDriverWait(BrowserDriver.getCurrentDriver(),10);
     private WebDriverWait waitLong = new WebDriverWait(BrowserDriver.getCurrentDriver(),600);
     private WebDriver driver = BrowserDriver.getCurrentDriver();
+    private JavascriptExecutor je = (JavascriptExecutor) driver;
 
     @Given("^I click on import feed$")
     public void clickOnFeedImport(){
@@ -30,7 +32,7 @@ public class FeedImportSteps {
 //        Utils.wait(1000);
         typeSelect.selectByValue("http");
 //        Utils.wait(1000);
-//        je.executeScript("arguments[0].scrollIntoView(true);",driver.findElement(By.cssSelector("div.catalog-source div.type.http input.url")));
+        je.executeScript("arguments[0].scrollIntoView(true);",driver.findElement(By.cssSelector("div.catalog-source div.type.http input.url")));
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.catalog-source div.type.http input.url"))).sendKeys(url);
 //        Utils.wait(1000);
     }
@@ -49,5 +51,34 @@ public class FeedImportSteps {
     private static boolean importSuccessShown(WebDriverWait waitLong, WebDriver driver){
         waitLong.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.catalog-source div.response-messages")));
         return driver.findElement(By.cssSelector("div.catalog-source div.response-messages")).findElements(By.cssSelector("p.type-success")).size() == 1;
+    }
+
+    @Given("^I click on check format$")
+    public void clickOnCheckFormat(){
+        je.executeScript("arguments[0].scrollIntoView(true);",driver.findElement(By.cssSelector("div.catalog-format")));
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.catalog-format div.submit"))).click();
+    }
+
+    @Given("^the format is successfully tested$")
+    public void testFormatResponse(){
+        waitLong.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.catalog-format div.response-messages")));
+        assertTrue("Formatprüfung fehlgeschlagen",formatSuccessShown(waitLong,driver));
+    }
+
+    private static boolean formatSuccessShown(WebDriverWait waitLong, WebDriver driver){
+        waitLong.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.catalog-source div.response-messages")));
+        return driver.findElement(By.cssSelector("div.catalog-format div.response-messages")).findElements(By.cssSelector("p.type-success")).size() == 1;
+    }
+
+    @Given("^I save the feed settings$")
+    public void saveFeedSettings(){
+        je.executeScript("arguments[0].scrollIntoView(true);",driver.findElement(By.cssSelector("div.save-settings div.submit")));
+        driver.findElement(By.cssSelector("div.save-settings div.submit")).click();
+    }
+
+    @Given("^the settings are saved$")
+    public void feedSettingsSaved(){
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.row.feed-overview")));
+        assertTrue(driver.findElement(By.cssSelector("div.row.feed-overview")).isDisplayed());
     }
 }

@@ -21,7 +21,15 @@ Feature: General
       Then I select HTTP and put in the feed url "<FeedUrl>"
       When I click on test feed
       Then the feed is imported successfully
-
+      #Check Feed Format
+      When I click on check format
+      Then the format is successfully tested
+      #Save Feed
+      When I save the feed settings
+      Then the settings are saved
+      #Create Export Channel
+      When I click on PSM
+      Then the PSM is opened
 
       Examples:
       | User |  Password  | ShopName  | ShopUrl | FeedUrl |
