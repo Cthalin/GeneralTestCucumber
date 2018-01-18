@@ -11,7 +11,7 @@ import cucumber.api.junit.Cucumber;
         features = "src/test/resources/web",
         glue = {"stepDefinition"},
         tags = {"@General"},
-        // dryRun = true,
+//         dryRun = true,
         monochrome = true,
         strict = true)
 public class TestRunner {
