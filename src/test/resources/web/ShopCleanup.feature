@@ -12,11 +12,12 @@ Feature: ShopCleanup
       Then I click on shop management
       Then shop management is open
       Then I click on shop selection
+      Then I check if shop named "<ShopName>" is available
       Then a TestShop is selected
       And I delete the shop
       Then I logout
 
 
       Examples:
-        | User |  Password  |
-        | release_1080@channelpilot.com | Daheim123 |
+        | User |  Password  | ShopName  |
+        | release_1080@channelpilot.com | Daheim123 | TestShop  |

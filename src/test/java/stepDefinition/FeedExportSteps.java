@@ -4,6 +4,7 @@ import cucumber.api.java.en.Given;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.BrowserDriver;
@@ -25,5 +26,48 @@ public class FeedExportSteps {
     public void psmIsOpened(){
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.row.channels")));
         assertTrue(driver.findElement(By.cssSelector("div.row.channels")).isDisplayed());
+    }
+
+    @Given("^I select the test shop named \"(.*?)\"$")
+    public void selectTestShop(String shopTitle){
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("body > div.page > div > div.row.shop-selector > div > a"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.row.shop-selector a[title=\""+shopTitle+"\"]"))).click();
+    }
+
+    @Given("^I click on add channel$")
+    public void clickOnAddChannel(){
+        je.executeScript("arguments[0].scrollIntoView(true);",driver.findElement(By.cssSelector("div.row.channels a.add-channel")));
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.row.channels a.add-channel"))).click();
+    }
+
+    @Given("^Channel Selection is opened$")
+    public void channelSelOpened(){
+        assertTrue(driver.findElement(By.cssSelector("div.twelve.columns.channel-browser")).isDisplayed());
+    }
+
+    @Given("^I click on channel \"(.*?)\"$")
+    public void clickOnChannel(String ref){
+        waitLong.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.channels a[href=\""+ref+"\"]"))).click();
+    }
+
+    @Given("^given channel \"(.*?)\" is selected$")
+    public void checkChannelLogo(String yourChannelLogo){
+        WebElement channelLogoWE = driver.findElement(By.cssSelector("div.app.pcs-manager div.logo > img[src]"));
+        assertTrue("Wrong Channel selected",channelLogoWE.getAttribute("src").contains(yourChannelLogo));
+    }
+
+    @Given("^I click on add$")
+    public void clickOnAdd(){
+        driver.findElement(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div > div.row > div > div.layer > div.row.context > div.display > div.general > div.links > div")).click();
+    }
+
+    @Given("^the channel is added$")
+    public void checkChannelAdded(String title){
+        assertTrue("Intended channel not added",checkAddedChannel(title));
+    }
+
+    private boolean checkAddedChannel(String title){
+        waitLong.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div > div.twelve.columns.channel-overview > ul > li:nth-child(2) > a")));
+        return driver.findElement(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div > div.twelve.columns.channel-overview > ul a")).findElements(By.cssSelector("a[title=\""+title+"\"]")).size() == 0;
     }
 }

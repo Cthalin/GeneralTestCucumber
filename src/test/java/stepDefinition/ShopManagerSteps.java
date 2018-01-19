@@ -64,9 +64,9 @@ public class ShopManagerSteps {
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.body a.button.okay"))).click();
     }
 
-    @Given("^I check if TestShop is available$")
-    public void searchForTestShop(){
-
+    @Given("^I check if shop named \"(.*?)\" is available$")
+    public void searchForTestShop(String shopName){
+        assertTrue(driver.findElement(By.cssSelector("a[title^=\""+shopName+"\"]")).isDisplayed());
     }
 
     @Given("^a TestShop is selected$")

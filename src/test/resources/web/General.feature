@@ -30,9 +30,23 @@ Feature: General
       #Create Export Channel
       When I click on PSM
       Then the PSM is opened
+      Then I select the test shop named "<ShopName>"
+      When I click on add channel
+      Then Channel Selection is opened
+      When I click on channel "<ChannelRef>"
+      Then given channel "<ChannelLogo>" is selected
+      When I click on add
+      Then the channel is added
 
+      #Delete TestShop
+      Then I click on shop management
+      Then shop management is open
+      Then I click on shop selection
+      Then I check if shop named "<ShopName>" is available
+      Then a TestShop is selected
+      And I delete the shop
       Then I logout
 
       Examples:
-      | User |  Password  | ShopName  | ShopUrl | FeedUrl |
-      | release_1080@channelpilot.com | Daheim123 | TestShop  | www.testshop.shop | http://www.daheim.de/channelpilot?password=cP4AMz2014 |
+      | User |  Password  | ShopName  | ShopUrl | FeedUrl | ChannelRef  | ChannelLogo |
+      | release_1080@channelpilot.com | Daheim123 | TestShop  | www.testshop.shop | http://www.daheim.de/channelpilot?password=cP4AMz2014 | #idealo.de  | https://cdn-frontend-channelpilotsolu.netdna-ssl.com/images/channels/medium/idealo.de.png |
