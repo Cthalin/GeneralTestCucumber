@@ -58,5 +58,19 @@ public class ShopManagerSteps {
         || driver.findElement(By.cssSelector("ul.category-navigation a[href=\"#catalog\"]")).getAttribute("class").equals(""));
     }
 
+    @Given("^I delete the shop$")
+    public void deleteShop(){
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.row.settings a.button.delete"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.body a.button.okay"))).click();
+    }
 
+    @Given("^I check if TestShop is available$")
+    public void searchForTestShop(){
+
+    }
+
+    @Given("^a TestShop is selected$")
+    public void selectTestShop(){
+        wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.cssSelector("a[title^=\"TestShop\"]")))).click();
+    }
 }

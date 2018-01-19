@@ -31,6 +31,8 @@ Feature: General
       When I click on PSM
       Then the PSM is opened
 
+      Then I logout
+
       Examples:
       | User |  Password  | ShopName  | ShopUrl | FeedUrl |
       | release_1080@channelpilot.com | Daheim123 | TestShop  | www.testshop.shop | http://www.daheim.de/channelpilot?password=cP4AMz2014 |

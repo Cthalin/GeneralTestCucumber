@@ -30,4 +30,12 @@ public class LoginSteps {
         wait.until(ExpectedConditions.elementToBeClickable(BrowserDriver.getCurrentDriver().findElement(By.cssSelector("div.ready"))));
         assertTrue(BrowserDriver.getCurrentDriver().findElement(By.cssSelector("div.app.dashboard")).isDisplayed());
     }
+
+    @Given("^I logout$")
+    public void logoutStep(){
+        WebDriverWait wait = new WebDriverWait(BrowserDriver.getCurrentDriver(),20);
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.category-context")));
+        BrowserDriver.getCurrentDriver().findElement(By.cssSelector("div.navigation-service a.button")).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.navigation-service a[href=\"/service/logout\"]"))).click();
+    }
 }
