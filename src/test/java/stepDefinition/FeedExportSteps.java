@@ -9,6 +9,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.BrowserDriver;
 
+import java.util.List;
+
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class FeedExportSteps {
@@ -31,7 +34,14 @@ public class FeedExportSteps {
     @Given("^I select the test shop named \"(.*?)\"$")
     public void selectTestShop(String shopTitle){
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("body > div.page > div > div.row.shop-selector > div > a"))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.row.shop-selector a[title=\""+shopTitle+"\"]"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.row.shop-selector a[title^=\""+shopTitle+"\"]"))).click();
+    }
+
+    @Given("^I check if channel \"(.*?)\" is already there$")
+    public void checkChannelPresence(String title){
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.twelve.columns.channel-overview")));
+        List<WebElement> bob = driver.findElements(By.cssSelector("div.twelve.columns.channel-overview a[title*=\""+title+"\"]"));
+        assertTrue("Intended channel is already there", bob.isEmpty());
     }
 
     @Given("^I click on add channel$")
@@ -61,7 +71,7 @@ public class FeedExportSteps {
         driver.findElement(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div > div.row > div > div.layer > div.row.context > div.display > div.general > div.links > div")).click();
     }
 
-    @Given("^the channel is added$")
+    @Given("^the channel \"(.*?)\" is added$")
     public void checkChannelAdded(String title){
         assertTrue("Intended channel not added",checkAddedChannel(title));
     }
@@ -69,5 +79,10 @@ public class FeedExportSteps {
     private boolean checkAddedChannel(String title){
         waitLong.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div > div.twelve.columns.channel-overview > ul > li:nth-child(2) > a")));
         return driver.findElement(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div > div.twelve.columns.channel-overview > ul a")).findElements(By.cssSelector("a[title=\""+title+"\"]")).size() == 0;
+    }
+
+    @Given("^I click on start$")
+    public void cickOnStart(){
+        wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.cssSelector("div.menu-bar a.button.start")))).click();
     }
 }

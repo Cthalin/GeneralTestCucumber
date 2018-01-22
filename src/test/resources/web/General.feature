@@ -31,14 +31,17 @@ Feature: General
       When I click on PSM
       Then the PSM is opened
       Then I select the test shop named "<ShopName>"
+      Then I check if channel "<ChannelTitle>" is already there
       When I click on add channel
       Then Channel Selection is opened
       When I click on channel "<ChannelRef>"
       Then given channel "<ChannelLogo>" is selected
       When I click on add
-      Then the channel is added
+      Then the channel "<ChannelTitle>" is added
 
       #Delete TestShop
+      When I click on start
+      Then I see the dashboard
       Then I click on shop management
       Then shop management is open
       Then I click on shop selection
@@ -48,5 +51,5 @@ Feature: General
       Then I logout
 
       Examples:
-      | User |  Password  | ShopName  | ShopUrl | FeedUrl | ChannelRef  | ChannelLogo |
-      | release_1080@channelpilot.com | Daheim123 | TestShop  | www.testshop.shop | http://www.daheim.de/channelpilot?password=cP4AMz2014 | #idealo.de  | https://cdn-frontend-channelpilotsolu.netdna-ssl.com/images/channels/medium/idealo.de.png |
+      | User |  Password  | ShopName  | ShopUrl | FeedUrl | ChannelRef  | ChannelLogo | ChannelTitle  |
+      | release_1080@channelpilot.com | Daheim123 | TestShop  | www.testshop.shop | http://www.daheim.de/channelpilot?password=cP4AMz2014 | #idealo.de  | https://cdn-frontend-channelpilotsolu.netdna-ssl.com/images/channels/medium/idealo.de.png | idealo (DE) |
