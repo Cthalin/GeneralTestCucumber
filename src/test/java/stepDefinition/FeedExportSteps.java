@@ -11,12 +11,12 @@ import utils.BrowserDriver;
 
 import java.util.List;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class FeedExportSteps {
     private WebDriverWait wait = new WebDriverWait(BrowserDriver.getCurrentDriver(),10);
     private WebDriverWait waitLong = new WebDriverWait(BrowserDriver.getCurrentDriver(),600);
+    private WebDriverWait waitShort = new WebDriverWait(BrowserDriver.getCurrentDriver(),2);
     private WebDriver driver = BrowserDriver.getCurrentDriver();
     private JavascriptExecutor je = (JavascriptExecutor) driver;
 
@@ -39,7 +39,7 @@ public class FeedExportSteps {
 
     @Given("^I check if channel \"(.*?)\" is already there$")
     public void checkChannelPresence(String title){
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.twelve.columns.channel-overview")));
+        waitShort.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.twelve.columns.channel-overview")));
         List<WebElement> bob = driver.findElements(By.cssSelector("div.twelve.columns.channel-overview a[title*=\""+title+"\"]"));
         assertTrue("Intended channel is already there", bob.isEmpty());
     }
@@ -77,7 +77,7 @@ public class FeedExportSteps {
     }
 
     private boolean checkAddedChannel(String title){
-        waitLong.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div > div.twelve.columns.channel-overview > ul > li:nth-child(2) > a")));
+        waitShort.until(ExpectedConditions.elementToBeClickable(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div > div.twelve.columns.channel-overview > ul a")));
         return driver.findElement(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div > div.twelve.columns.channel-overview > ul a")).findElements(By.cssSelector("a[title=\""+title+"\"]")).size() == 0;
     }
 
