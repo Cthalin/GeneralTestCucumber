@@ -61,7 +61,9 @@ public class ShopManagerSteps {
     @Given("^I delete the shop$")
     public void deleteShop(){
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.row.settings a.button.delete"))).click();
+        Utils.wait(3000);
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.body a.button.okay"))).click();
+        Utils.wait(3000);
     }
 
     @Given("^I check if shop named \"(.*?)\" is available$")

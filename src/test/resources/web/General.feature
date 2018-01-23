@@ -59,20 +59,22 @@ Feature: General
       When I click on PSM
       Then the PSM is opened
       Then I select the test shop named "<ShopName>"
-      Then I check if channel "<ChannelTitle>" is already there
+#      Then I check if channel "<ChannelTitle>" is already there
       When I click on add channel
       Then Channel Selection is opened
       When I click on channel "<ChannelRef>"
       Then given channel "<ChannelLogo>" is selected
       When I click on add
       Then the channel "<ChannelTitle>" is added
+      Then I set the channel "<ChannelTitle>" to active
+      Then I check the checksum of my export feed "<ChannelTitle>" "<Checksum>" on "<ChannelFile>"
       Then I logout
 
       Examples:
-        | User |  Password  | ShopName  | ChannelRef  | ChannelLogo | ChannelTitle  |
-        | release_1080@channelpilot.com | Daheim123 | TestShop  | #idealo.de  | https://cdn-frontend-channelpilotsolu.netdna-ssl.com/images/channels/medium/idealo.de.png | idealo (DE) |
+        | User |  Password  | ShopName  | ChannelRef  | ChannelLogo | ChannelTitle  | Checksum  | ChannelFile |
+        | release_1080@channelpilot.com | Daheim123 | TestShop  | #idealo.de  | https://cdn-frontend-channelpilotsolu.netdna-ssl.com/images/channels/medium/idealo.de.png | idealo (DE) | 9a5df6191b3ce72c036d3e3dc23ab178  | idealode  |
 
-    @General
+    @General2
     Scenario Outline: Delete TestShop
       #Login
       When login with given data "<User>" and "<Password>"

@@ -33,7 +33,7 @@ public class LoginSteps {
 
     @Given("^I logout$")
     public void logoutStep(){
-        Utils.wait(1000);
+        Utils.wait(2000);
         WebDriverWait wait = new WebDriverWait(BrowserDriver.getCurrentDriver(),20);
         wait.until(ExpectedConditions.elementToBeClickable(BrowserDriver.getCurrentDriver().findElement(By.cssSelector("div.navigation-service a.button")))).click();
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.navigation-service a[href=\"/service/logout\"]"))).click();

@@ -119,6 +119,10 @@ public class BrowserFactory {
         firefoxProfile.setAcceptUntrustedCertificates(true);
         firefoxProfile.setAssumeUntrustedCertificateIssuer(true);
         firefoxProfile.setPreference("intl.accept_languages", "de");
+        firefoxProfile.setPreference("browser.download.folderList", 2);
+        firefoxProfile.setPreference("browser.download.manager.showWhenStarting", false);
+        firefoxProfile.setPreference("browser.download.dir", "D:\\");
+        firefoxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk", "text/csv");
         return firefoxProfile;
     }
 
