@@ -10,13 +10,12 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.BrowserDriver;
 import view.Utils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
@@ -27,6 +26,9 @@ public class FeedExportSteps {
     private WebDriverWait waitShort = new WebDriverWait(BrowserDriver.getCurrentDriver(),2);
     private WebDriver driver = BrowserDriver.getCurrentDriver();
     private JavascriptExecutor je = (JavascriptExecutor) driver;
+    private String shopId;
+    private int itemCount;
+    private DatabaseSteps dbsteps = new DatabaseSteps();
 
     @Given("^I click on PSM$")
     public void clickOnPsm(){
@@ -40,8 +42,13 @@ public class FeedExportSteps {
     }
 
     @Given("^I select the test shop named \"(.*?)\"$")
-    public void selectTestShop(String shopTitle){
+    public void selectTestShop(String shopTitle) throws SQLException, ClassNotFoundException {
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("body > div.page > div > div.row.shop-selector > div > a"))).click();
+        shopId = getShopId(shopTitle);
+//        itemCount = getChannelItemCount(shopTitle);
+//        Connection con = dbsteps.establishDbConnection();
+////        dbsteps.createStatementForChecksum(con,shopId);
+//        itemCount = dbsteps.createStatementForItemCount(con,shopId);
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.row.shop-selector a[title^=\""+shopTitle+"\"]"))).click();
     }
 
@@ -109,35 +116,44 @@ public class FeedExportSteps {
         Utils.wait(120000); //Wait for feed update
     }
 
-    @Given("^I check the checksum of my export feed \"(.*?)\" \"(.*?)\" on \"(.*?)\"$")
-    public void getExportChecksum(String title, String testSum, String channelFile) throws IOException, NoSuchAlgorithmException {
+    @Given("^I check the export feed \"(.*?)\" on \"(.*?)\"$")
+    public void getExportChecksum(String title, String channelFile) throws IOException, NoSuchAlgorithmException, SQLException, ClassNotFoundException {
         //Open channel
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div > div.twelve.columns.channel-overview > ul a[title=\""+title+"\"]"))).click();
         //Get Exportfeed URL
         String exportFeedUrl = driver.findElement(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div.row > div.twelve.columns.header > div.details > span.fact.export-url > input[type=\"text\"]")).getAttribute("value");
-        System.out.println(exportFeedUrl);
+//        System.out.println(exportFeedUrl);
         Utils.wait(3000);
         driver.navigate().to(exportFeedUrl);
         Utils.wait(3000);
-        System.out.println("Should be downloaded");
+//        System.out.println("Should be downloaded");
         driver.navigate().back();
 
-        MessageDigest md = MessageDigest.getInstance("MD5");
+//        MessageDigest md = MessageDigest.getInstance("MD5");
         String shopTitle = driver.findElement(By.cssSelector("body > div.page > div > div.row.shop-selector > div > h1")).getText();
 
+        Connection con = dbsteps.establishDbConnection();
+        itemCount = dbsteps.createStatementForItemCount(con,shopId);
         String filePath = getFilePath(shopTitle,channelFile);
-        File f=new File(filePath);
-        InputStream is=new FileInputStream(f);
-        byte[] buffer=new byte[8192];
-        int read=0;
-        while( (read = is.read(buffer)) > 0)
-            md.update(buffer, 0, read);
-        byte[] md5 = md.digest();
-        BigInteger bi=new BigInteger(1, md5);
-        String output = bi.toString(16);
-        System.out.println(output+"  "+filePath);
+        //Count the items in export feed
+            int rows = count(filePath)-1; //subtract 1 for header
+            System.out.println("Rows: "+rows);
+            System.out.println("Item count: "+itemCount);
+            assertTrue(rows == itemCount);
+            System.out.println("All items configured for this channel are exported");
 
-        assertTrue("Checksum invalid", output.equals(testSum));
+        //Calculate md5 sum
+//        File f=new File(filePath);
+//        InputStream is=new FileInputStream(f);
+//        byte[] buffer=new byte[8192];
+//        int read=0;
+//        while( (read = is.read(buffer)) > 0)
+//            md.update(buffer, 0, read);
+//        byte[] md5 = md.digest();
+//        BigInteger bi=new BigInteger(1, md5);
+//        String output = bi.toString(16);
+//        System.out.println(output+"  "+filePath);
+//        assertTrue("Checksum invalid", output.equals(testSum));
     }
 
     private String getFilePath(String shopTitle, String channelFile){
@@ -150,4 +166,37 @@ public class FeedExportSteps {
         return filePath;
     }
 
+    private String getShopId(String shopTitle){
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.row.shop-selector a[title^=\""+shopTitle+"\"]")));
+        shopId = driver.findElement(By.cssSelector("div.row.shop-selector a[title^=\""+shopTitle+"\"]")).getAttribute("data-id");
+        System.out.println("ShopID: "+shopId);
+        return shopId;
+    }
+
+    private int getChannelItemCount(String shopTitle){
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.row.shop-selector a[title^=\""+shopTitle+"\"]")));
+        itemCount = Integer.valueOf(driver.findElement(By.cssSelector("div.row.shop-selector a[title^=\""+shopTitle+"\"] span.offers-online")).getText());
+        return itemCount;
+    }
+
+    public int count(String filename) throws IOException {
+        InputStream is = new BufferedInputStream(new FileInputStream(filename));
+        try {
+            byte[] c = new byte[1024];
+            int count = 0;
+            int readChars = 0;
+            boolean empty = true;
+            while ((readChars = is.read(c)) != -1) {
+                empty = false;
+                for (int i = 0; i < readChars; ++i) {
+                    if (c[i] == '\n') {
+                        ++count;
+                    }
+                }
+            }
+            return (count == 0 && !empty) ? 1 : count;
+        } finally {
+            is.close();
+        }
+    }
 }

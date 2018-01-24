@@ -68,7 +68,8 @@ public class ShopManagerSteps {
 
     @Given("^I check if shop named \"(.*?)\" is available$")
     public void searchForTestShop(String shopName){
-        assertTrue(driver.findElement(By.cssSelector("a[title^=\""+shopName+"\"]")).isDisplayed());
+        Utils.wait(2000);
+        assertTrue("No more test shop available",driver.findElement(By.cssSelector("a[title^=\""+shopName+"\"]")).isDisplayed());
     }
 
     @Given("^a TestShop is selected$")
