@@ -102,10 +102,14 @@ public class FeedExportSteps {
         wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.cssSelector("div.menu-bar a.button.start")))).click();
     }
 
-    @Given("^I set the channel \"(.*?)\" to active$")
-    public void setChannelActive(String title){
+    @Given("^I open the export channel \"(.*?)\"$")
+    public void openExportChannel(String title){
         //Open channel
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div > div.twelve.columns.channel-overview > ul a[title=\""+title+"\"]"))).click();
+    }
+
+    @Given("^I set the channel to active$")
+    public void setChannelActive(){
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div.category-context.settings > div.context.setup > form > div:nth-child(2) > div > fieldset > label > input"))).click();
         je.executeScript("arguments[0].scrollIntoView(true);",driver.findElement(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div.category-context.settings > div.context.setup > form > div.twelve.columns > div.submit")));
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div.category-context.settings > div.context.setup > form > div.twelve.columns > div.submit"))).click();
@@ -141,7 +145,8 @@ public class FeedExportSteps {
             System.out.println("Item count: "+itemCount);
             assertTrue(rows == itemCount);
             System.out.println("All items configured for this channel are exported");
-
+        File f = new File(filePath);
+        f.delete();
         //Calculate md5 sum
 //        File f=new File(filePath);
 //        InputStream is=new FileInputStream(f);
@@ -198,5 +203,10 @@ public class FeedExportSteps {
         } finally {
             is.close();
         }
+    }
+
+    @Given("^I just wait$")
+    public void justWait(){
+        Utils.wait(30000);
     }
 }

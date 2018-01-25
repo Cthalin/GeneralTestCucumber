@@ -66,7 +66,8 @@ Feature: General
       Then given channel "<ChannelLogo>" is selected
       When I click on add
       Then the channel "<ChannelTitle>" is added
-      Then I set the channel "<ChannelTitle>" to active
+      Then I open the export channel "<ChannelTitle>"
+      Then I set the channel to active
       Then I check the export feed "<ChannelTitle>" on "<ChannelFile>"
       Then I logout
 
@@ -75,13 +76,38 @@ Feature: General
         | release_1080@channelpilot.com | Daheim123 | TestShop  | #idealo.de  | https://cdn-frontend-channelpilotsolu.netdna-ssl.com/images/channels/medium/idealo.de.png | idealo (DE) |    idealode  |
 
     @General
+    Scenario Outline: Create Filter
+      #Login
+      When login with given data "<User>" and "<Password>"
+      Then I see the dashboard
+      #Open TestShop
+      Then I click on shop management
+      Then shop management is open
+      Then I click on shop selection
+      Then a TestShop is selected
+      #Add Filter
+      Then I click on set up filter
+      Then I click on add filter
+      Then I put in a filter name "<FilterName>" and save it
+      Then I setup a filter for price
+      When I click on PSM
+      Then the PSM is opened
+      Then I select the test shop named "<ShopName>"
+      Then I open the export channel "<ChannelTitle>"
+      Then I select the created testfilter
+      Then I check the export feed "<ChannelTitle>" on "<ChannelFile>"
+      Then I logout
+
+      Examples:
+        | User |  Password  | ShopName  | ChannelRef  | ChannelLogo | ChannelTitle  |    ChannelFile |  FilterName  |
+        | release_1080@channelpilot.com | Daheim123 | TestShop  | #idealo.de  | https://cdn-frontend-channelpilotsolu.netdna-ssl.com/images/channels/medium/idealo.de.png | idealo (DE) |    idealode  |  TestFilter  |
+
+    @General
     Scenario Outline: Delete TestShop
       #Login
       When login with given data "<User>" and "<Password>"
       Then I see the dashboard
       #Delete TestShop
-#      When I click on start
-#      Then I see the dashboard
       Then I click on shop management
       Then shop management is open
       Then I click on shop selection
