@@ -15,6 +15,7 @@ public class LoginSteps {
     @Given("^open the login page$")
     public void user_is_on_HomePage() {
         System.setProperty("browser","CHROME");
+//        System.setProperty("browser", "FIREFOX");
         Utils.openPage();
         assertTrue(Utils.isLogInPageDisplayed());
     }

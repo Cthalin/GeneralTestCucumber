@@ -1,10 +1,7 @@
 package stepDefinition;
 
 import cucumber.api.java.en.Given;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.BrowserDriver;
@@ -12,6 +9,7 @@ import view.Utils;
 
 import java.io.*;
 import java.math.BigInteger;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -121,16 +119,22 @@ public class FeedExportSteps {
     }
 
     @Given("^I check the export feed \"(.*?)\" on \"(.*?)\"$")
-    public void getExportChecksum(String title, String channelFile) throws IOException, NoSuchAlgorithmException, SQLException, ClassNotFoundException {
+    public void checkExportFeed(String title, String channelFile) throws IOException, NoSuchAlgorithmException, SQLException, ClassNotFoundException {
         //Open channel
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div > div.twelve.columns.channel-overview > ul a[title=\""+title+"\"]"))).click();
         //Get Exportfeed URL
         String exportFeedUrl = driver.findElement(By.cssSelector("body > div.page > div > div.app.pcs-manager > div > div.row > div.twelve.columns.header > div.details > span.fact.export-url > input[type=\"text\"]")).getAttribute("value");
 //        System.out.println(exportFeedUrl);
+//        Utils.wait(3000);
+//        driver.navigate().to(exportFeedUrl);
+        try{
+            driver.get(exportFeedUrl);
+        }catch (TimeoutException timeoutException){
+            System.out.println("Timeout "+timeoutException);
+        }
+
         Utils.wait(3000);
-        driver.navigate().to(exportFeedUrl);
-        Utils.wait(3000);
-//        System.out.println("Should be downloaded");
+        System.out.println("Should be downloaded");
         driver.navigate().back();
 
 //        MessageDigest md = MessageDigest.getInstance("MD5");
@@ -139,6 +143,7 @@ public class FeedExportSteps {
         Connection con = dbsteps.establishDbConnection();
         itemCount = dbsteps.createStatementForItemCount(con,shopId);
         String filePath = getFilePath(shopTitle,channelFile);
+
         //Count the items in export feed
             int rows = count(filePath)-1; //subtract 1 for header
             System.out.println("Rows: "+rows);
@@ -147,6 +152,7 @@ public class FeedExportSteps {
             System.out.println("All items configured for this channel are exported");
         File f = new File(filePath);
         f.delete();
+
         //Calculate md5 sum
 //        File f=new File(filePath);
 //        InputStream is=new FileInputStream(f);
@@ -166,7 +172,9 @@ public class FeedExportSteps {
         if(System.getProperty("os.name").startsWith("Windows")) {
             filePath = "C:\\Users\\Erik\\Downloads\\"+shopTitle+"_"+channelFile+".csv";
         } else {
-            filePath = "$HOME/Downloads/"+shopTitle+"_"+channelFile+".csv";
+            shopTitle = shopTitle.toLowerCase();
+//            filePath = "$HOME/Downloads/"+shopTitle+"_"+channelFile+".csv";
+            filePath = "/home/erik/Downloads/"+shopTitle+"_"+channelFile+".csv";
         }
         return filePath;
     }

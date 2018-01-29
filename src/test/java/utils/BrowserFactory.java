@@ -10,6 +10,7 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -111,18 +112,23 @@ public class BrowserFactory {
             System.setProperty("webdriver.gecko.driver", "src/main/resources/geckodriver");
         }
 
-        return new FirefoxDriver();
+        FirefoxOptions ffoptions = new FirefoxOptions();
+        ffoptions.setProfile(firefoxProfile);
+        return new FirefoxDriver(ffoptions.toCapabilities());
     }
 
     private static FirefoxProfile getFirefoxProfile() {
+        String path = getFilePath();
         FirefoxProfile firefoxProfile = new FirefoxProfile();
         firefoxProfile.setAcceptUntrustedCertificates(true);
         firefoxProfile.setAssumeUntrustedCertificateIssuer(true);
         firefoxProfile.setPreference("intl.accept_languages", "de");
         firefoxProfile.setPreference("browser.download.folderList", 2);
         firefoxProfile.setPreference("browser.download.manager.showWhenStarting", false);
-        firefoxProfile.setPreference("browser.download.dir", "D:\\");
-        firefoxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk", "text/csv");
+        firefoxProfile.setPreference("browser.download.dir", path);
+        firefoxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk", "application/csv,application/excel,application/vnd.ms-excel,application/vnd.msexcel,text/anytext,text/comma-separated-values,text/csv,text/plain,text/x-csv,application/x-csv,text/x-comma-separated-values,text/tab-separated-values");
+        firefoxProfile.setPreference("browser.helperApps.alwaysAsk.force", false);
+
         return firefoxProfile;
     }
 
@@ -132,5 +138,15 @@ public class BrowserFactory {
         java.awt.Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension dim = new Dimension((int) screenSize.getWidth(), (int) screenSize.getHeight());
         driver.manage().window().setSize(dim);
+    }
+
+    private static String getFilePath(){
+        String filePath;
+        if(System.getProperty("os.name").startsWith("Windows")) {
+            filePath = "C:\\Users\\Erik\\Downloads\\";
+        } else {
+            filePath = "$HOME/Downloads/";
+        }
+        return filePath;
     }
 }

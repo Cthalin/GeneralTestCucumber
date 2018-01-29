@@ -3,7 +3,7 @@ Feature: General
   Background:
     Given open the login page
 
-    @General
+    @General2
     Scenario Outline: Test general function
       #Login
       When login with given data "<User>" and "<Password>"
@@ -22,7 +22,7 @@ Feature: General
         | User |  Password  | ShopName  | ShopUrl |
         | release_1080@channelpilot.com | Daheim123 | TestShop  | www.testshop.shop |
 
-    @General
+    @General2
     Scenario Outline: Import Feed
       #Login
       When login with given data "<User>" and "<Password>"
@@ -31,7 +31,6 @@ Feature: General
       Then I click on shop management
       Then shop management is open
       Then I click on shop selection
-#      Then I check if shop named "<ShopName>" is available
       Then a TestShop is selected
       #Import Feed
       Then I click on import feed
@@ -47,8 +46,8 @@ Feature: General
       Then I logout
 
       Examples:
-        | User |  Password  | ShopName  | FeedUrl |
-        | release_1080@channelpilot.com | Daheim123 | TestShop  | http://www.daheim.de/channelpilot?password=cP4AMz2014 |
+        | User |  Password  | FeedUrl |
+        | release_1080@channelpilot.com | Daheim123 | http://www.daheim.de/channelpilot?password=cP4AMz2014 |
 
     @General
     Scenario Outline: Add Export Channel
@@ -59,7 +58,6 @@ Feature: General
       When I click on PSM
       Then the PSM is opened
       Then I select the test shop named "<ShopName>"
-#      Then I check if channel "<ChannelTitle>" is already there
       When I click on add channel
       Then Channel Selection is opened
       When I click on channel "<ChannelRef>"
@@ -75,7 +73,7 @@ Feature: General
         | User |  Password  | ShopName  | ChannelRef  | ChannelLogo | ChannelTitle  |    ChannelFile |
         | release_1080@channelpilot.com | Daheim123 | TestShop  | #idealo.de  | https://cdn-frontend-channelpilotsolu.netdna-ssl.com/images/channels/medium/idealo.de.png | idealo (DE) |    idealode  |
 
-    @General
+    @General2
     Scenario Outline: Create Filter
       #Login
       When login with given data "<User>" and "<Password>"
@@ -99,10 +97,10 @@ Feature: General
       Then I logout
 
       Examples:
-        | User |  Password  | ShopName  | ChannelRef  | ChannelLogo | ChannelTitle  |    ChannelFile |  FilterName  |
-        | release_1080@channelpilot.com | Daheim123 | TestShop  | #idealo.de  | https://cdn-frontend-channelpilotsolu.netdna-ssl.com/images/channels/medium/idealo.de.png | idealo (DE) |    idealode  |  TestFilter  |
+        | User |  Password  | ShopName  |      ChannelTitle  |    ChannelFile |  FilterName  |
+        | release_1080@channelpilot.com | Daheim123 | TestShop  |      idealo (DE) |    idealode  |  TestFilter  |
 
-    @General
+    @General2
     Scenario Outline: Delete TestShop
       #Login
       When login with given data "<User>" and "<Password>"
@@ -111,11 +109,10 @@ Feature: General
       Then I click on shop management
       Then shop management is open
       Then I click on shop selection
-#      Then I check if shop named "<ShopName>" is available
       Then a TestShop is selected
       And I delete the shop
       Then I logout
 
       Examples:
-        | User |  Password  | ShopName  |
-        | release_1080@channelpilot.com | Daheim123 | TestShop  |
+        | User |  Password  |
+        | release_1080@channelpilot.com | Daheim123 |
