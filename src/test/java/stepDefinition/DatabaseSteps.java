@@ -4,8 +4,10 @@ import java.sql.*;
 
 public class DatabaseSteps {
 
-    private String username = "cpadmin";
-    private String password = "N6RVvvqFPF";
+//    private String username = "cpadmin";
+//    private String password = "N6RVvvqFPF";
+    private String username = "test_automation";
+    private String password = "yurcEub{Frold1";
     private String dbUrl = "jdbc:mysql://88.99.243.137:3306/cp_export";
 
     public Connection establishDbConnection() throws ClassNotFoundException, SQLException {

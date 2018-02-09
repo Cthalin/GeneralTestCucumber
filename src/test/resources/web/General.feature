@@ -3,7 +3,7 @@ Feature: General
   Background:
     Given open the login page
 
-    @General2
+    @General
     Scenario Outline: Test general function
       #Login
       When login with given data "<User>" and "<Password>"
@@ -22,7 +22,7 @@ Feature: General
         | User |  Password  | ShopName  | ShopUrl |
         | release_1080@channelpilot.com | Daheim123 | TestShop  | www.testshop.shop |
 
-    @General2
+    @General
     Scenario Outline: Import Feed
       #Login
       When login with given data "<User>" and "<Password>"
@@ -73,7 +73,7 @@ Feature: General
         | User |  Password  | ShopName  | ChannelRef  | ChannelLogo | ChannelTitle  |    ChannelFile |
         | release_1080@channelpilot.com | Daheim123 | TestShop  | #idealo.de  | https://cdn-frontend-channelpilotsolu.netdna-ssl.com/images/channels/medium/idealo.de.png | idealo (DE) |    idealode  |
 
-    @General2
+    @General
     Scenario Outline: Create Filter
       #Login
       When login with given data "<User>" and "<Password>"
@@ -100,7 +100,7 @@ Feature: General
         | User |  Password  | ShopName  |      ChannelTitle  |    ChannelFile |  FilterName  |
         | release_1080@channelpilot.com | Daheim123 | TestShop  |      idealo (DE) |    idealode  |  TestFilter  |
 
-    @General2
+    @General
     Scenario Outline: Delete TestShop
       #Login
       When login with given data "<User>" and "<Password>"

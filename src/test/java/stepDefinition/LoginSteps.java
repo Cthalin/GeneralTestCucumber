@@ -10,8 +10,6 @@ import view.Utils;
 import static org.junit.Assert.assertTrue;
 
 public class LoginSteps {
-    private Utils utils = new Utils();
-
     @Given("^open the login page$")
     public void user_is_on_HomePage() {
         System.setProperty("browser","CHROME");
