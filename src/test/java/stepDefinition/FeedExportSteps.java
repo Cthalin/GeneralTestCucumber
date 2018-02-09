@@ -173,8 +173,8 @@ public class FeedExportSteps {
             filePath = "C:\\Users\\Erik\\Downloads\\"+shopTitle+"_"+channelFile+".csv";
         } else {
             shopTitle = shopTitle.toLowerCase();
-//            filePath = "$HOME/Downloads/"+shopTitle+"_"+channelFile+".csv";
-            filePath = "/home/erik/Downloads/"+shopTitle+"_"+channelFile+".csv";
+            String home = System.getProperty("user.home");
+            filePath = home+"/Downloads/"+shopTitle+"_"+channelFile+".csv";
         }
         return filePath;
     }
